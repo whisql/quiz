@@ -40,7 +40,7 @@ bash:
 	$(php) bash
 
 init:
-	$(up)
+	docker compose up -d --remove-orphans
 	$(php) composer install
 	$(MAKE) fix-vendor-permissions
 	$(symfony) doctrine:migrations:migrate --no-interaction
