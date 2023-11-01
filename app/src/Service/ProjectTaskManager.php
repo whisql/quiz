@@ -21,13 +21,20 @@ readonly class ProjectTaskManager
 
     public function decideProjectTask(ProjectTask $projectTask, DecisionCommandInterface $decisionCommand): void
     {
-        $this->decisionHandlerFactory->getDecisionHandler($decisionCommand)->resolve($projectTask, $decisionCommand);
+        try {
+            $this->em->beginTransaction();
+            $this->decisionHandlerFactory->getDecisionHandler($decisionCommand)->resolve($projectTask, $decisionCommand);
 
-        $projectTask->makeCompletedCondition();
-        $this->em->flush();
+            $projectTask->makeCompletedCondition();
+            $this->em->flush();
 
-        $this->workflow->activateNextProjectTask($projectTask->getProject());
+            $this->workflow->activateNextProjectTask($projectTask->getProject());
 
-        $this->projectManager->tryToCompleteProject($projectTask->getProject());
+            $this->projectManager->tryToCompleteProject($projectTask->getProject());
+            $this->em->commit();
+        } catch (\Exception $exception) {
+            $this->em->rollback();
+            throw $exception;
+        }
     }
 }
