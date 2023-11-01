@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+    php:
+        build:
+            context: .
+        volumes:
+            - ./app:/app
+            - ./conf/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+        networks:
+            - backend
+        depends_on:
+            - pgsql
+    pgsql:
+        image: postgres:15.2-alpine
+        ports:
+            - "${POSTGRES_PORT}:5432"
+        volumes:
+            - quiz_data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: quiz
+            POSTGRES_USER: postgres
+            POSTGRES_HOST_AUTH_METHOD: trust
+        networks:
+            - backend
+networks:
+    backend:
+        driver: bridge
+volumes:
+    quiz_data:

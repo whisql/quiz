@@ -1,0 +1,18 @@
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# File-based project format
+*.iws
+
+# IntelliJ
+/.idea
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# local docker settings
+.env
+
+**/.DS_Store

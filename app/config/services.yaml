@@ -1,0 +1,27 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    _instanceof:
+        App\Service\Strategy\TaskCreationStrategyInterface:
+            tags: [ 'app.service.strategy' ]
+        App\Service\Decision\Handler\DecisionHandlerInterface:
+            tags: [ 'app.service.decision_handler' ]
+
+    App\Service\Strategy\StrategyFactory:
+        arguments:
+            - !tagged_iterator app.service.strategy
+
+    App\Service\Decision\DecisionHandlerFactory:
+        arguments:
+            - !tagged_iterator app.service.decision_handler
